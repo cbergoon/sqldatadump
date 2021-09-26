@@ -89,7 +89,7 @@ func isValidConnectionString(connectionDetails string) bool {
 
 func main() {
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: sqldatadump [--directory] [--schema=<schema>] [--batchesPerFile=<batches>] [--rowsPerBatch=<rows>] <username>:<password>@<address>:<port>/<database>\n")
+		fmt.Fprintf(os.Stderr, "Usage: sqldatadump [--directory=<directory>] [--schema=<schema>] [--batchesPerFile=<batches>] [--rowsPerBatch=<rows>] <username>:<password>@<address>:<port>/<database>\n")
 	}
 
 	cfg := &config{}

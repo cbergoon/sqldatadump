@@ -12,7 +12,7 @@ See the docs [here](https://godoc.org/github.com/cbergoon/sqldatadump).
 
 #### Install
 ```
-go get github.com/cbergoon/sqldatadump
+go install github.com/cbergoon/sqldatadump
 ```
 
 #### Example Usage
@@ -30,7 +30,7 @@ $ sqldatadump --directory=./table-data --schema=dbo --rowsPerBatch=1000 --batche
 To use windows authentication:
 
 ```
-$ sqldatadump --directory=./table-data --schema=dbo --rowsPerBatch=1000 --batchesPerFile=10 --ignoreTables=CarrierRef,MasterLocation 'domain\<username>:<password>@127.0.0.1:1433/AdventureWorks'
+$ sqldatadump --directory=./table-data --schema=dbo --rowsPerBatch=1000 --batchesPerFile=10 --ignoreTables=CarrierRef,MasterLocation '<domain>\<username>:<password>@127.0.0.1:1433/AdventureWorks'
 ```
 #### License
 This project is licensed under the MIT License.
