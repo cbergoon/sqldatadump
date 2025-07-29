@@ -131,11 +131,32 @@ func main() {
 		os.Exit(-1)
 	}
 
-	cfg.DbUsername = connectionDetails[:strings.Index(connectionDetails, ":")]
-	cfg.DbPassword = connectionDetails[strings.Index(connectionDetails, ":")+1 : strings.Index(connectionDetails, "@")]
-	cfg.DbAddress = connectionDetails[strings.Index(connectionDetails, "@")+1 : strings.LastIndex(connectionDetails, ":")]
-	cfg.DbPort = connectionDetails[strings.LastIndex(connectionDetails, ":")+1 : strings.LastIndex(connectionDetails, "/")]
-	cfg.DbDatabase = connectionDetails[strings.Index(connectionDetails, "/")+1:]
+	// Fix parsing to handle '@' in password
+	atIdx := strings.LastIndex(connectionDetails, "@")
+	if atIdx == -1 {
+		flag.Usage()
+		os.Exit(-1)
+	}
+	userPass := connectionDetails[:atIdx]
+	hostDb := connectionDetails[atIdx+1:]
+
+	colonIdx := strings.Index(userPass, ":")
+	if colonIdx == -1 {
+		flag.Usage()
+		os.Exit(-1)
+	}
+	cfg.DbUsername = userPass[:colonIdx]
+	cfg.DbPassword = userPass[colonIdx+1:]
+
+	colonIdxHost := strings.LastIndex(hostDb, ":")
+	slashIdxHost := strings.LastIndex(hostDb, "/")
+	if colonIdxHost == -1 || slashIdxHost == -1 || colonIdxHost > slashIdxHost {
+		flag.Usage()
+		os.Exit(-1)
+	}
+	cfg.DbAddress = hostDb[:colonIdxHost]
+	cfg.DbPort = hostDb[colonIdxHost+1 : slashIdxHost]
+	cfg.DbDatabase = hostDb[slashIdxHost+1:]
 
 	mssqldb, err := sqlx.Connect("sqlserver", fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s;port=%s", cfg.DbAddress, cfg.DbUsername, cfg.DbPassword, cfg.DbDatabase, cfg.DbPort))
 	if err != nil {
